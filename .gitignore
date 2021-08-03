@@ -1,0 +1,16 @@
+#template for web projects
+
+# folders to ignore virtual env, vscode etc
+env/ 
+.vscode/
+*/__pycache__/
+*/__pycache__/*
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyc
+
+# C extensions
+*.so
+
+
