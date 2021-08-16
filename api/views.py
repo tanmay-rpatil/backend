@@ -3,7 +3,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .serializers import InputSerializer,FileSerializer,AnalyticsSerializer
+from .serializers import InputSerializer,FileSerializer,AnalyticsSerializer,Sensor_ReadingSerializer
 from .models import Device,Accel,File
 import datetime
 # Create your views here.
@@ -38,6 +38,15 @@ class FileView(APIView):
 @api_view(['POST'])
 def insert_analytics(request,format=None):
 	serializer = AnalyticsSerializer(data=request.data)
+	if serializer.is_valid():
+		serializer.save()
+		print('saved')
+	# print(serializer.data['device_id'])
+	return Response(serializer.data)
+
+@api_view(['POST'])
+def insert_readings(request,format=None):
+	serializer = Sensor_ReadingSerializer(data=request.data)
 	if serializer.is_valid():
 		serializer.save()
 		print('saved')
