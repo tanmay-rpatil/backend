@@ -4,21 +4,22 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import InputSerializer,FileSerializer,AnalyticsSerializer,Sensor_ReadingSerializer
-from .models import Device,Accel,File
+from .models import Device,Accel,File, Sensor, Sensor_Reading
 import datetime
 # Create your views here.
 @api_view(['POST'])
 def insert(request,format=None):
 	serializer = InputSerializer(data=request.data)
+	print('serializer')
 	if serializer.is_valid():
-		print(serializer.data['device_id'])
-		device = Device.objects.get( pk = int(serializer.data['device_id']))
-		data = (serializer.data['content'])
-		for line in data.splitlines():
-			print(line)
-			lst = line.split(",")
-			timestamp = datetime.datetime.strptime(lst[0], '%Y-%m-%d %H:%M:%S.%f')
-			a = Accel(device_id=device,active_ms=int(lst[1]),timestamp=timestamp,x_axis=lst[2],y_axis=lst[3],z_axis=lst[4])
+		print('valid')
+		print(serializer.data['sensor_id'])
+		sensor = Sensor.objects.get( pk = int(serializer.data['sensor_id']))
+		data = (serializer.data['data'])
+		for line in data:
+			# print(line['timestamp'])
+			timestamp = datetime.datetime.strptime(line['timestamp'], '%Y-%m-%d %H:%M:%S.%f')
+			a = Sensor_Reading(sensor=sensor,timestamp=timestamp,data=line)
 			a.save()
 		# serializer.save()
 		# print('yeeehaawww')
