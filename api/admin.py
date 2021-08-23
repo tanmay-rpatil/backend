@@ -17,9 +17,9 @@ class AccelAdmin(admin.ModelAdmin):
 	list_display = ['timestamp', 'sensor', 'active_ms']
 
 @admin.register(File)
-class AccelAdmin(admin.ModelAdmin):
+class FileAdmin(admin.ModelAdmin):
 	# readonly_fields = ('file',)
-	list_display = ['start_timestamp', 'end_timestamp', 'file']
+	list_display = ['timestamp', 'file']
 
 @admin.register(Analytics)
 class AnalyticsAdmin(admin.ModelAdmin):
