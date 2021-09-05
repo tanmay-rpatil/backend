@@ -12,17 +12,13 @@
  where extname = 'timescaledb';
 ```
 
-## To-Do
-
-- Create the API to send and receive data in batches
-- make a database schema ER diag
-- Learn Basics of AWS, AWS EC2, AMI
-
-## Questions
-
-- Communication from analytics module? JSON data for features? 
-- 
-
+## Directory Structure
+- ``` accounts/ ``` : Django app defining custom user model
+- ``` api/ ``` : Django app defining all models and providing the api interface
+- ``` backend/ ``` : Django settings, conf directory
+- ``` database_design/ ``` : Documentation for the database schema. 
+- ``` testing/ ``` : Scripts to test the APIs
+- ``` media/ ``` : Temperory - location to store media files 
 ## Data Req
 
 1/10th in terms 

@@ -6,7 +6,8 @@ from rest_framework import status
 from .serializers import InputSerializer,FileSerializer,AnalyticsSerializer,Sensor_ReadingSerializer
 from .models import Analytics, Device,Accel,File, Sensor, Sensor_Reading
 import datetime
-# Create your views here.
+
+# bulk insert for sesnor stream data in JSON format
 @api_view(['POST'])
 def insert(request,format=None):
 	serializer = InputSerializer(data=request.data)
@@ -33,6 +34,7 @@ class FileView(APIView):
 		else:
 			return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# bulk insert for analytics data in JSON format
 @api_view(['POST'])
 def insert_analytics(request,format=None):
 	serializer = InputSerializer(data=request.data)

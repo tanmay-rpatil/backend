@@ -1,0 +1,3 @@
+# Ignore the sample data files
+Sample_Data/*
+Sample_Data/
