@@ -1,20 +1,20 @@
 from django.db import models
 from rest_framework.serializers import SerializerMetaclass
-from accounts.models import CustomUser
+from accounts.models import CustomUser, Application
 
-# Create your models here.
+
 def error_dict():
 	return {'error':''}
 
 class Device(models.Model):
 	name = models.CharField(max_length=100, blank=False,null=False)
 	user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from user to device
-	properties  = models.JSONField(blank=False, null=False, default=dict())
+	properties  = models.JSONField(blank=False, null=False, default=dict)
 	def __str__(self):
 		return ( str(self.user) + "'s " + self.name + " :" + str(self.pk) )
 
 class Sensor(models.Model):
-	# device and sesor types 
+	# device and sensor types 
 	TYPES = (
 		('a', 'accel'),
 		('g', 'gyro'),
@@ -30,11 +30,21 @@ class Sensor(models.Model):
 		help_text='Device type',
 	)
 	device = models.ForeignKey(Device, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from user to device
-	schema  = models.JSONField(blank=False, null=False, default=dict())
+	schema  = models.JSONField(blank=False, null=False, default=dict)
 
 	def __str__(self):
 		return ( str(self.device) + ": " + self.type_of_sensor + " :" + str(self.pk) )
 	
+class Sensor_Users(models.Model): 
+	#mapping to store user:sensor:app
+	sensor = models.ForeignKey(Sensor, on_delete=models.RESTRICT, null=False, blank=False )
+	user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT, null=False, blank=False )
+	app = models.ForeignKey(Application, on_delete=models.RESTRICT, null=False, blank=False )
+
+class Notification(models.Model):
+	target_device = models.ForeignKey(Device, on_delete=models.RESTRICT, null=False, blank=False )
+	contents = models.JSONField(blank=False, null=False, default=dict)
+
 class File(models.Model):
 	# sensor Foreign Key Here.
 	sensor = models.ForeignKey(Sensor, on_delete=models.RESTRICT, null=False, blank=False )
@@ -46,7 +56,7 @@ class Analytics(models.Model):
 	# sensor Foreign Key Here.
 	sensor = models.ForeignKey(Sensor, on_delete=models.RESTRICT, null=False, blank=False )
 	timestamp = models.DateTimeField(blank=False,null=False)
-	data  = models.JSONField(blank=False, null=False, default=dict())
+	data  = models.JSONField(blank=False, null=False, default=dict)
 
 class Analytics_File(models.Model):
 	# sensor Foreign Key Here.
@@ -58,7 +68,7 @@ class Sensor_Reading(models.Model):
 	# sensor Foreign Key Here.
 	sensor = models.ForeignKey(Sensor, on_delete=models.DO_NOTHING, null=False, blank=False )
 	timestamp = models.DateTimeField(blank=False,null=False)
-	data  = models.JSONField(blank=False, null=False, default=dict())
+	data  = models.JSONField(blank=False, null=False, default=dict)
 
 class Accel(models.Model):
 	# give user as  foreign key too?
