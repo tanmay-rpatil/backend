@@ -10,11 +10,12 @@ import datetime
 # bulk insert for sesnor stream data in JSON format
 @api_view(['POST'])
 def insert(request,format=None):
+	print(datetime.datetime.now())
 	serializer = InputSerializer(data=request.data)
-	print('serializer')
+	# print('serializer')
 	if serializer.is_valid():
-		print('valid')
-		print(serializer.data['sensor_id'])
+		# print('valid')
+		# print(serializer.data['sensor_id'])
 		sensor = Sensor.objects.get( pk = int(serializer.data['sensor_id']))
 		data = (serializer.data['data'])
 		for line in data:
@@ -22,6 +23,7 @@ def insert(request,format=None):
 			timestamp = datetime.datetime.strptime(line['timestamp'], '%Y-%m-%d %H:%M:%S.%f')
 			a = Sensor_Reading(sensor=sensor,timestamp=timestamp,data=line)
 			a.save()
+	print(datetime.datetime.now())
 	return Response(serializer.data)
 
 class FileView(APIView):
