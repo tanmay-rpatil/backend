@@ -69,11 +69,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # print(os.environ['SECRET_KEY'])
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'timescale.db.backends.postgresql', # for integrating timescaledb
         'USER': 'postgres',
         'NAME': 'backend',
         'HOST': 'localhost',
         'PASSWORD': os.environ['PSWD'],
+        # 'CONN_MAX_AGE':10,
     },
 }
 

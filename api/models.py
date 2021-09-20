@@ -1,7 +1,8 @@
 from django.db import models
 from rest_framework.serializers import SerializerMetaclass
 from accounts.models import CustomUser, Application
-
+from timescale.db.models.fields import TimescaleDateTimeField
+from timescale.db.models.managers import TimescaleManager
 
 def error_dict():
 	return {'error':''}
@@ -67,14 +68,6 @@ class Analytics_File(models.Model):
 class Sensor_Reading(models.Model):
 	# sensor Foreign Key Here.
 	sensor = models.ForeignKey(Sensor, on_delete=models.DO_NOTHING, null=False, blank=False )
-	timestamp = models.DateTimeField(blank=False,null=False)
+	# timestamp = models.DateTimeField(blank=False,null=False)
+	time = TimescaleDateTimeField(blank=False,null=False,interval="1 day")
 	data  = models.JSONField(blank=False, null=False, default=dict)
-
-class Accel(models.Model):
-	# give user as  foreign key too?
-	sensor = models.ForeignKey(Sensor, on_delete=models.RESTRICT, null=False, blank=False )
-	active_ms = models.BigIntegerField()
-	timestamp = models.DateTimeField(blank=False,null=False)
-	x_axis = models.CharField( max_length=15, blank=False,null=False)
-	y_axis = models.CharField( max_length=15, blank=False,null=False)
-	z_axis = models.CharField( max_length=15, blank=False,null=False)
