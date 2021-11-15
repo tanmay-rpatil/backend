@@ -7,6 +7,9 @@ from timescale.db.models.managers import TimescaleManager
 def error_dict():
 	return {'error':''}
 
+
+
+
 class Device(models.Model):
 	name = models.CharField(max_length=100, blank=False,null=False)
 	user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from user to device
@@ -51,7 +54,12 @@ class File(models.Model):
 	sensor = models.ForeignKey(Sensor, on_delete=models.RESTRICT, null=False, blank=False )
 	timestamp = models.DateTimeField(blank=False,null=False)
 	file_format = models.CharField(max_length=255, blank=True, null=True)
-	file = models.FileField(blank=False, null=False)
+	file = models.FileField(blank=False, null=False, upload_to=)
+	
+	#function to give a directory structure to the model
+	def generate_filename(self, filename):
+		name = "data/%s/%s" % (self.sensor.pk, filename)
+		return name
 
 class Analytics(models.Model):
 	# sensor Foreign Key Here.
@@ -68,6 +76,5 @@ class Analytics_File(models.Model):
 class Sensor_Reading(models.Model):
 	# sensor Foreign Key Here.
 	sensor = models.ForeignKey(Sensor, on_delete=models.DO_NOTHING, null=False, blank=False )
-	# timestamp = models.DateTimeField(blank=False,null=False)
 	time = TimescaleDateTimeField(blank=False,null=False,interval="1 day")
 	data  = models.JSONField(blank=False, null=False, default=dict)

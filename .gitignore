@@ -5,6 +5,8 @@ env/
 .vscode/
 */__pycache__/
 */__pycache__/*
+gcloud-commands/
+gcloud-commands/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
