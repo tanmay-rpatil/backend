@@ -6,6 +6,9 @@ max_row = []
 for i in range(4):
 	max_row.append(20000)
 
+
+# lowspec server
+# api_url = 'http://35.200.204.173/api/insert/' 
 api_url = 'http://127.0.0.1:8000/api/insert/'
 with open('./Sample_Data/accel-converted.csv') as csvfile:
 	reader = csv.DictReader(csvfile)

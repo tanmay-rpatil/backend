@@ -3,6 +3,9 @@ from typing import OrderedDict
 from time import sleep
 # max_row = [10,50,100,500,1000,5000,10000]
 
+# lowspec server
+api_url = 'http://35.200.204.173/api/insert/' 
+# api_url = 'http://34.131.176.130/api/insert/'
 def testHelper(request_body):
-	r = requests.post(url='http://127.0.0.1:8000/api/insert/', json=request_body)
+	r = requests.post(url=api_url, json=request_body)
 	return r

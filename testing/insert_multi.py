@@ -2,13 +2,18 @@ from test_insertions import testHelper
 from time import sleep
 import csv,json,requests
 from typing import OrderedDict 
-max_row = []
-sum = 0
-for i in range(40):
-	sum += 500*(i+1)
-	max_row.append(500*(i+1))
+max_row = [231000]
+# sum = 0
+# for i in range(21):
+# 	sum += 1000*(i+1)
+# 	max_row.append(1000*(i+1))
 print(sum)
-api_url = 'http://127.0.0.1:8000/api/insert/'
+
+# lowspec server
+api_url = 'http://35.200.204.173/api/insert/' 
+
+# api_url = 'http://34.131.176.130/api/insert/'
+
 with open('./Sample_Data/accel-converted.csv') as csvfile:
 	reader = csv.DictReader(csvfile)
 	for count in max_row:
