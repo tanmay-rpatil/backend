@@ -67,7 +67,7 @@ $ sudo timescaledb-tune --quiet --yes
 $ sudo service postgresql restart
 
 ```
-psql setup
+### psql setup
 
     sudo su - postgres
     psql
@@ -79,7 +79,7 @@ psql setup
         postgres=# CREATE EXTENSION IF NOT EXISTS timescaledb;
         postgres=# \q
 
-setup django server
+### setup django server
 
     git clone 
     cd ./backend
@@ -89,19 +89,19 @@ setup django server
     
     export SECRET_KEY=$(cat /dev/urandom | LC_ALL=C tr -dc '[:alpha:]'| fold -w 50 | head -n1)
     
-For development server, dsable apacge and use django server.
+### For development server, dsable apacge and use django server.
 
     sudo update-rc.d apache2 disable
     sudo /etc/init.d/apache2 stop
     sudo /home/f20190054/backend/env/bin/python /home/f20190054/backend/manage.py  runserver 0.0.0.0:80
 
-For setting up cronjob to start server at reboot
+### For setting up cronjob to start server at reboot
 
     crontab -e
         #insert the following line 
         @reboot /home/f20190054/backend/env/bin/python /home/f20190054/backend/manage.py  runserver 0.0.0.0:80
 
-For truncating a table
+### For truncating a table
 
     sudo psql -U postgres -h localhost
         postgres=# \c backend
