@@ -42,9 +42,13 @@ class FileView(APIView):
 class SensorReadingFileView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request):
+		start = datetime.datetime.now() # for logging insertion time.
 		file_serializer = Sensor_Reading_FileSerializer(data=request.data)
 		if file_serializer.is_valid():
 			file_serializer.save()
+			delta = datetime.datetime.now() - start
+			with open('/home/tanmay/BITS/sop/backend/testing/delta-file.txt','a') as log:
+				log.write(str(file_serializer.data['sensor'])+' : '+str(delta.total_seconds())+'\n')
 			return Response(file_serializer.data, status=status.HTTP_201_CREATED)
 		else:
 			return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -68,14 +72,9 @@ def insert_analytics(request,format=None):
 
 @api_view(['POST'])
 def insert_readings(request,format=None):
-	start = datetime.datetime.now() # for logging insertion time.
 	serializer = Sensor_ReadingSerializer(data=request.data)
 	if serializer.is_valid():
 		serializer.save()
 		print('saved')
-	delta = datetime.datetime.now() - start
-	with open('/home/tanmay/BITS/sop/backend/testing/delta.txt','a') as log:
-		log.write(str(serializer.data['count'])+','+str(delta.total_seconds())+'\n')
-		return Response(serializer.data)
 	# print(serializer.data['device_id'])
 	return Response(serializer.data)
