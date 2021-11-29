@@ -68,9 +68,14 @@ def insert_analytics(request,format=None):
 
 @api_view(['POST'])
 def insert_readings(request,format=None):
+	start = datetime.datetime.now() # for logging insertion time.
 	serializer = Sensor_ReadingSerializer(data=request.data)
 	if serializer.is_valid():
 		serializer.save()
 		print('saved')
+	delta = datetime.datetime.now() - start
+	with open('/home/tanmay/BITS/sop/backend/testing/delta.txt','a') as log:
+		log.write(str(serializer.data['count'])+','+str(delta.total_seconds())+'\n')
+		return Response(serializer.data)
 	# print(serializer.data['device_id'])
 	return Response(serializer.data)

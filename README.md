@@ -20,11 +20,12 @@
 - ``` testing/ ``` : Scripts to test the APIs
 - ``` media/ ``` : Temperory - location to store media files 
 
-## TODO
+# TODO
+- **IMP -> HANDLE ERROR CONDITIONS** such as invalid serializers
 - Improve Documentation
 - Beutify script dump below
 
-## Server Setup
+# Server Setup
 	Instructions to setup a development server on Debain/Desbian based systems.
 ### Install Custom Python Version (Python 3.8.1)
 ```bash

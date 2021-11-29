@@ -8,8 +8,8 @@ for i in range(4):
 
 
 # lowspec server
-# api_url = 'http://35.200.204.173/api/insert/' 
-api_url = 'http://127.0.0.1:8000/api/insert/'
+api_url = 'http://35.200.204.173/api/insert/' 
+# api_url = 'http://127.0.0.1:8000/api/insert/'
 with open('./Sample_Data/accel-converted.csv') as csvfile:
 	reader = csv.DictReader(csvfile)
 	for count in max_row:
