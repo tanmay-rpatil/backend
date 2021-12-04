@@ -6,6 +6,10 @@ from rest_framework import status
 from .serializers import InputSerializer,FileSerializer,AnalyticsSerializer,Sensor_ReadingSerializer, Sensor_Reading_FileSerializer
 from .models import Analytics, Device,File, Sensor, Sensor_Reading, Sensor_Reading_File
 import datetime
+from pathlib import Path
+
+#BASE DIRECTORY NAME
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # bulk insert for sesnor stream data in JSON format
 @api_view(['POST'])
@@ -25,7 +29,7 @@ def insert(request,format=None):
 			to_save.append(a)
 	Sensor_Reading.objects.bulk_create(to_save)
 	delta = datetime.datetime.now() - start
-	with open('/home/tanmay/BITS/sop/backend/testing/delta.txt','a') as log:
+	with open( str(BASE_DIR.joinpath('testing/delta.txt')) ,'a') as log:
 		log.write(str(serializer.data['count'])+','+str(delta.total_seconds())+'\n')
 		return Response(serializer.data)
 
@@ -47,7 +51,7 @@ class SensorReadingFileView(APIView):
 		if file_serializer.is_valid():
 			file_serializer.save()
 			delta = datetime.datetime.now() - start
-			with open('/home/tanmay/BITS/sop/backend/testing/delta-file.txt','a') as log:
+			with open( str(BASE_DIR.joinpath('testing/delta-file.txt')),'a') as log:
 				log.write(str(file_serializer.data['sensor'])+' : '+str(delta.total_seconds())+'\n')
 			return Response(file_serializer.data, status=status.HTTP_201_CREATED)
 		else:
