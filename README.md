@@ -95,7 +95,7 @@ $ sudo service postgresql restart
     sudo /etc/init.d/apache2 stop
     sudo /home/f20190054/backend/env/bin/python /home/f20190054/backend/manage.py  runserver 0.0.0.0:80
 
-### For setting up cronjob to start server at reboot
+### For setting up cronjob to start servhttps://thispointer.com/python-how-to-create-a-zip-archive-from-multiple-files-or-directory/https://thispointer.com/python-how-to-create-a-zip-archive-from-multiple-files-or-directory/er at reboot
 
     crontab -e
         #insert the following line 
