@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import File,Analytics,Sensor_Reading,Analytics_File,Sensor_Reading_File
 
+datetime_format_str = '%Y-%m-%d %H:%M:%S.%f'
+
 class InputSerializer(serializers.Serializer):
 	sensor_id = serializers.IntegerField()
 	count = serializers.IntegerField()
@@ -33,3 +35,7 @@ class Analytics_FileSerializer(serializers.ModelSerializer):
 		model = Analytics_File
 		fields = '__all__'
 		
+class Sensor_Reading_Query_FileSerializer(serializers.Serializer):
+	start = serializers.DateTimeField(format=datetime_format_str, input_formats=[datetime_format_str])
+	end = serializers.DateTimeField(format=datetime_format_str, input_formats=[datetime_format_str])
+	sensor_id = serializers.IntegerField()

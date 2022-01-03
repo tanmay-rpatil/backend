@@ -10,9 +10,7 @@ for i in range(21):
 print(sum)
 
 # lowspec server
-# api_url = 'http://35.200.204.173/api/insert/' 
-
-api_url = 'http://34.131.235.208/api/insert/'
+api_url = 'www.mhealthbackend.live/api/insert'
 
 with open('./Sample_Data/accel-converted.csv') as csvfile:
 	reader = csv.DictReader(csvfile)

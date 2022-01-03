@@ -3,14 +3,16 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .serializers import InputSerializer,FileSerializer,AnalyticsSerializer,Sensor_ReadingSerializer, Sensor_Reading_FileSerializer
+from .serializers import *
 from .models import Analytics, Device,File, Sensor, Sensor_Reading, Sensor_Reading_File
 import datetime
 from pathlib import Path
+from zipfile import ZipFile
 
 #BASE DIRECTORY NAME
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+## Insertions
 # bulk insert for sesnor stream data in JSON format
 @api_view(['POST'])
 def insert(request,format=None):
@@ -74,6 +76,7 @@ def insert_analytics(request,format=None):
 			a.save()
 	return Response(serializer.data)
 
+# old version -> insert single sensor reading
 @api_view(['POST'])
 def insert_readings(request,format=None):
 	serializer = Sensor_ReadingSerializer(data=request.data)
@@ -82,3 +85,22 @@ def insert_readings(request,format=None):
 		print('saved')
 	# print(serializer.data['device_id'])
 	return Response(serializer.data)
+
+
+
+## Querying
+# return a zip of all files in range
+class ReadingQueryView(APIView):
+	parser_classes = (MultiPartParser, FormParser)
+	def post(self, request):
+		file_serializer = Sensor_Reading_Query_FileSerializer(data=request.data)
+		if file_serializer.is_valid():
+			# query the db to get a list of files
+			
+			# archive the file list 
+
+			# return the archive
+			return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+		else:
+			return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
