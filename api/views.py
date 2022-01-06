@@ -100,7 +100,7 @@ class ReadingQueryView(APIView):
 			# archive the file list 
 
 			# return the archive
-			return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+			return Response(file_serializer.data, status=status.HTTP_201_CREATED) #change response code
 		else:
 			return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
