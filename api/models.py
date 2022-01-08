@@ -4,10 +4,13 @@ from accounts.models import CustomUser, Application
 from timescale.db.models.fields import TimescaleDateTimeField
 from timescale.db.models.managers import TimescaleManager
 
+
 def error_dict():
 	return {'error':''}
-
-
+#function to give a directory structure to the model
+def generate_filename(instance, filename):
+	# path is already relative to MEDIA_ROOT
+	return '/'.join(['sensor_readings',str(instance.time.year),str(instance.time.month),str(instance.time.day),str(instance.sensor.pk),filename])
 class Device(models.Model):
 	name = models.CharField(max_length=100, blank=False,null=False)
 	user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from user to device
@@ -54,11 +57,6 @@ class File(models.Model):
 	file_format = models.CharField(max_length=255, blank=True, null=True)
 	file = models.FileField(blank=False, null=False, upload_to='files/%Y/%m/%d/')
 	
-	#function to give a directory structure to the model
-	def generate_filename(self, filename):
-		name = "data/%s/%s" % (self.sensor.pk, filename)
-		return name
-
 class Analytics(models.Model):
 	# sensor Foreign Key Here.
 	sensor = models.ForeignKey(Sensor, on_delete=models.RESTRICT, null=False, blank=False )
@@ -82,4 +80,7 @@ class Sensor_Reading_File(models.Model):
 	# sensor Foreign Key Here.
 	sensor = models.ForeignKey(Sensor, on_delete=models.DO_NOTHING, null=False, blank=False )
 	time = TimescaleDateTimeField(blank=False,null=False,interval="1 day")
-	data_file = models.FileField(blank=False, null=False, upload_to='sensor_readings/%Y/%m/%d/')
+	data_file = models.FileField(blank=False, null=False, upload_to=generate_filename)
+	
+	# def save(self, *args, **kwargs):
+	# 		super(Sensor_Reading_File, self).save() # Call the "real" save() method.

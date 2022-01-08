@@ -28,6 +28,7 @@
 # Server Setup
 	Instructions to setup a development server on Debain/Desbian based systems.
 ### Install Custom Python Version (Python 3.8.1)
+#### NOTE - ONLY needed if python version<3.8.1 is installed/available in the repos 
 ```bash
 $ export PYTHON_VERSION=3.8.1
 $ export PYTHON_MAJOR=3
@@ -71,7 +72,7 @@ $ sudo service postgresql restart
 
     sudo su - postgres
     psql
-        postgres=# ALTER USER postgres PASSWORD 'admin4Post';
+        postgres=# ALTER USER postgres PASSWORD 'psswd_here';
         ALTER ROLE
         postgres=# \q
     sudo psql -U postgres -h localhost
