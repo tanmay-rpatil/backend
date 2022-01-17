@@ -1,13 +1,31 @@
+# REST framework libs used
+###
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import *
+###
+
+#Models and other local py imports
+###
 from .models import Analytics, Device,File, Sensor, Sensor_Reading, Sensor_Reading_File
+###
+
+#Misc libs
+###
 import datetime
-from pathlib import Path
+###
+
+# libs for archiving
+###
+from pathlib import Path 
 from zipfile import ZipFile
+import os
+from io import BytesIO
+from django.http import FileResponse,HttpResponse
+###
 
 #BASE DIRECTORY NAME
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,16 +109,42 @@ def insert_readings(request,format=None):
 ## Querying
 # return a zip of all files in range
 class ReadingQueryView(APIView):
-	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request):
-		file_serializer = Sensor_Reading_Query_FileSerializer(data=request.data)
-		if file_serializer.is_valid():
+		serializer = Sensor_Reading_Query_FileSerializer(data=request.data)
+		# print(serializer)    
+		if serializer.is_valid():
 			# query the db to get a list of files
-			
+			start_datetime = (serializer.data['start'])
+			end_datetime = (serializer.data['end'])
+			sensor = (serializer.data['sensor_id'])
+			files_list_qs = Sensor_Reading_File.objects.filter(time__range=(start_datetime,end_datetime),sensor=sensor)
+			print(start_datetime,end_datetime,sensor)
 			# archive the file list 
-
-			# return the archive
-			return Response(file_serializer.data, status=status.HTTP_201_CREATED) #change response code
+			# Folder name in ZIP archive which contains the files
+			# E.g [thearchive.zip]/somefiles/file2.txt
+			# zip_subdir = str(BASE_DIR.joinpath('queries/query.zip'))
+			zip_subdir = 'query'
+			zip_filename = "%s.zip" % zip_subdir
+			# Open BytesIO to grab in-memory ZIP contents
+			s = BytesIO()
+			# The zip compressor
+			zf = ZipFile(s, "w")
+			for files in files_list_qs:
+				# Calculate path for file in zip
+				fdir, fname = os.path.split((files.data_file.path))
+				zip_path = os.path.join(zip_subdir, fname)
+				# Add file, at correct path
+				zf.write(str(files.data_file.path), zip_path)
+			# Must close zip for all contents to be written
+			zf.close()
+			 # Grab ZIP file from in-memory, make response with correct MIME-type
+			resp = HttpResponse(s.getvalue(), content_type = "application/x-zip-compressed")
+			# ..and correct content-disposition
+			resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
+			print(resp)    
+			return resp
+			##credits: @dbr https://stackoverflow.com/questions/67454/serving-dynamically-generated-zip-archives-in-django
+			# return Response( status=status.HTTP_201_CREATED) #change response code
 		else:
-			return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+			return Response( status=status.HTTP_400_BAD_REQUEST)
 

@@ -6,6 +6,7 @@ urlpatterns = [
 	path('insert/', views.insert ,name='insert'),
 	path('insert_analytics/', views.insert_analytics ,name='insert_analytics'),
 	path('upload/', views.FileView.as_view() ,name='upload'),
-	path('upload_readings/', views.SensorReadingFileView.as_view() ,name='upload_readings'),	
+	path('upload_readings/', views.SensorReadingFileView.as_view() ,name='upload_readings'),
+	path('query_readings_file/', views.ReadingQueryView.as_view() ,name='query_readings_file'),	
 ]
 urlpatterns = format_suffix_patterns(urlpatterns) # in order to accept URLS like "/entry-details/2.json" or "/entry-details/2.api" or "/entry-list.json"
