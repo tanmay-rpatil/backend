@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Device,File, Sensor,Analytics, Sensor_Reading, Sensor_Reading_File
+from .models import Device,File, Sensor,Analytics, Sensor_Reading, Sensor_Reading_File, Type, Schema
 # Register your models here.
 
 @admin.register(Sensor)
@@ -29,6 +29,14 @@ class Sensor_ReadingAdmin(admin.ModelAdmin):
 class Sensor_ReadingFileAdmin(admin.ModelAdmin):
 	# readonly_fields = ('file',)
 	list_display = ['time', 'data_file','sensor']
+
+@admin.register(Type)
+class TypeAdmin(admin.ModelAdmin):
+	list_display = ['category','table']
+
+@admin.register(Schema)
+class SchemaAdmin(admin.ModelAdmin):
+	list_display = ['purpose']
 ## UTC seconds to SQL timestamp
 # do = datetime.datetime.strptime(ts_new, '%Y-%m-%d %H:%M:%S.%f')
 # a = Accel(device_id=d,active_ms=100,timestamp=do,x_axis='1',y_axis='2',z_axis='3')

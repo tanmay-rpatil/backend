@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from rest_framework import status
+from rest_framework import status, generics #for CRUD
 from .serializers import *
 ###
 
@@ -55,6 +55,7 @@ def insert(request,format=None):
 
 class FileView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
+	#create
 	def post(self, request):
 		file_serializer = FileSerializer(data=request.data)
 		if file_serializer.is_valid():
@@ -62,6 +63,13 @@ class FileView(APIView):
 			return Response(file_serializer.data, status=status.HTTP_201_CREATED)
 		else:
 			return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class FileMethods(generics.RetrieveUpdateDestroyAPIView):
+	# HTTP methods included:
+	# PUT- full update, PATCH- partial update, GET- retrive by id, DELETE- delete 
+    queryset = File.objects.all()
+    serializer_class = FileSerializer
+
 # for testing sesnor readings as files
 class SensorReadingFileView(APIView):
 	parser_classes = (MultiPartParser, FormParser)

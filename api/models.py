@@ -11,6 +11,22 @@ def error_dict():
 def generate_filename(instance, filename):
 	# path is already relative to MEDIA_ROOT
 	return '/'.join(['sensor_readings',str(instance.time.year),str(instance.time.month),str(instance.time.day),str(instance.sensor.pk),filename])
+
+class Schema(models.Model):
+	# a table that keeps track of schemas for different JSON fields.
+	# try -> make this ENUM? A table of tables?
+	purpose = models.CharField(max_length=100, blank=False,null=False, help_text='Used for, e,g "type_notif_name","type_sensor_name"') #table that uses this JSON field
+	schema = models.JSONField(blank=False, null=False, default=dict)
+	def __str__(self):
+		return (self.purpose)
+class Type(models.Model):
+	# to track categories/tyepes of sensors, notifs, etc
+	table = models.CharField(max_length=100, blank=False,null=False) #table that uses this JSON field
+	category = models.CharField(max_length=50, blank=False,null=False)
+	schema = models.ForeignKey(Schema, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from Schemas to Types
+	def __str__(self):
+		return ( (self.table) + ':' + (self.category) )
+
 class Device(models.Model):
 	name = models.CharField(max_length=100, blank=False,null=False)
 	user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from user to device

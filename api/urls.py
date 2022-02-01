@@ -6,6 +6,7 @@ urlpatterns = [
 	path('insert/', views.insert ,name='insert'),
 	path('insert_analytics/', views.insert_analytics ,name='insert_analytics'),
 	path('upload/', views.FileView.as_view() ,name='upload'),
+	path('files/<int:pk>', views.FileMethods.as_view(), name='file_methods'),
 	path('upload_readings/', views.SensorReadingFileView.as_view() ,name='upload_readings'),
 	path('query_readings_file/', views.ReadingQueryView.as_view() ,name='query_readings_file'),	
 ]
