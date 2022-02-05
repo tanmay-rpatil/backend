@@ -13,48 +13,27 @@ def generate_filename(instance, filename):
 	return '/'.join(['sensor_readings',str(instance.time.year),str(instance.time.month),str(instance.time.day),str(instance.sensor.pk),filename])
 
 class Schema(models.Model):
-	# a table that keeps track of schemas for different JSON fields.
-	# try -> make this ENUM? A table of tables?
-	purpose = models.CharField(max_length=100, blank=False,null=False, help_text='Used for, e,g "type_notif_name","type_sensor_name"') #table that uses this JSON field
+	# to track categories/tyepes and their schema of sensors, notifs, etc
+	table = models.CharField(max_length=100, blank=False,null=False, help_text="table that uses this category belongs to, e.g. sensor", default="table_name")
+	category = models.CharField(max_length=50, help_text="the category, e.g accelrometer\n. NULL if entire table has one schema", null=True) 
 	schema = models.JSONField(blank=False, null=False, default=dict)
 	def __str__(self):
-		return (self.purpose)
-class Type(models.Model):
-	# to track categories/tyepes of sensors, notifs, etc
-	table = models.CharField(max_length=100, blank=False,null=False) #table that uses this JSON field
-	category = models.CharField(max_length=50, blank=False,null=False)
-	schema = models.ForeignKey(Schema, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from Schemas to Types
-	def __str__(self):
-		return ( (self.table) + ':' + (self.category) )
+		return ( (self.table) + '_' + (self.category) )
 
 class Device(models.Model):
-	name = models.CharField(max_length=100, blank=False,null=False)
+	name = models.CharField(max_length=100, blank=False,null=False, default="device")
 	user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from user to device
 	properties  = models.JSONField(blank=False, null=False, default=dict)
 	def __str__(self):
 		return ( str(self.user) + "'s " + self.name + " :" + str(self.pk) )
 
 class Sensor(models.Model):
-	# device and sensor types 
-	TYPES = (
-		('a', 'accel'),
-		('g', 'gyro'),
-		('c', 'compass'),
-		('ca', 'cam')
-	)
-	type_of_sensor= models.CharField( 
-		max_length=2,
-		choices=TYPES,
-		blank=False,
-		null=False,
-		default='a',
-		help_text='Device type',
-	)
-	device = models.ForeignKey(Device, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from user to device
-	schema  = models.JSONField(blank=False, null=False, default=dict)
+	# each unique sensor
+	type_of_sensor= models.ForeignKey(Schema, on_delete=models.RESTRICT, null=False, blank=False ) # type, hence schema is selected here
+	device = models.ForeignKey(Device, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from device to sensor
 
 	def __str__(self):
-		return ( str(self.device) + ": " + self.type_of_sensor + " :" + str(self.pk) )
+		return ( str(self.device) + "_" + str(self.type_of_sensor) + "_" + str(self.pk) )
 	
 class Sensor_Users(models.Model): 
 	#mapping to store user:sensor:app
@@ -65,6 +44,7 @@ class Sensor_Users(models.Model):
 class Notification(models.Model):
 	target_device = models.ForeignKey(Device, on_delete=models.RESTRICT, null=False, blank=False )
 	contents = models.JSONField(blank=False, null=False, default=dict)
+	type_of_notif= models.ForeignKey(Schema, on_delete=models.RESTRICT, null=False, blank=False ) # type, hence schema is selected here
 
 class File(models.Model):
 	# sensor Foreign Key Here.
