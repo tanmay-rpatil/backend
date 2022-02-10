@@ -1,7 +1,7 @@
 # REST framework libs used
 ###
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework import status, generics #for CRUD
@@ -18,13 +18,14 @@ from .models import Analytics, Device,File, Sensor, Sensor_Reading, Sensor_Readi
 import datetime
 ###
 
-# libs for archiving
+# libs for archiving and unzipping
 ###
 from pathlib import Path 
-from zipfile import ZipFile
+from zipfile import ZIP_STORED, ZipFile
 import os
 from io import BytesIO
 from django.http import FileResponse,HttpResponse
+from django.core.files import File as File_helper
 ###
 
 #BASE DIRECTORY NAME
@@ -70,7 +71,7 @@ class FileMethods(generics.RetrieveUpdateDestroyAPIView):
     queryset = File.objects.all()
     serializer_class = FileSerializer
 
-# for testing sesnor readings as files
+# for inserting sesnor readings as files
 class SensorReadingFileView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request):
@@ -84,6 +85,37 @@ class SensorReadingFileView(APIView):
 			return Response(file_serializer.data, status=status.HTTP_201_CREATED)
 		else:
 			return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# for extracting sensor files from zip:
+class SensorReadingUnzip(APIView):
+	parser_classes = (MultiPartParser, FormParser, FileUploadParser)
+	def post(self, request):
+		# start = datetime.datetime.now() # for logging insertion time.
+		serializer = Sensor_Reading_ZipSerializer(data=request.data)
+		# print(serializer)
+		if serializer.is_valid():
+			##IMP Check for integrity before extraction??
+			zip_file = request.FILES['zip_file']
+			timestamps = serializer.data['timestamps'] # a list of timestamps?
+			sensor_id = serializer.data['sensor_id']
+			##IMP Check for valid sensor id
+
+			print(timestamps[0])
+			with ZipFile(zip_file, 'r') as opened:
+				files = opened.infolist()
+				iter = 0
+				for readings_file in files:
+					raw_data = BytesIO(opened.read(readings_file))
+					file_obj = File_helper(raw_data, name=readings_file.filename)
+					timestamp = datetime.datetime.strptime(timestamps[iter], '%Y-%m-%d %H:%M:%S.%f')
+					to_save = Sensor_Reading_File(sensor=Sensor.objects.get(pk=sensor_id), time=timestamp, data_file=file_obj)
+					to_save.save()
+					print(readings_file.filename,timestamps[iter])
+
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		else:
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # bulk insert for analytics data in JSON format
 @api_view(['POST'])

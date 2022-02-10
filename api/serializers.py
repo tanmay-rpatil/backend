@@ -21,6 +21,7 @@ class AnalyticsSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 class Sensor_ReadingSerializer(serializers.ModelSerializer):
+	
 	class Meta():
 		model = Sensor_Reading
 		fields = '__all__'
@@ -39,3 +40,10 @@ class Sensor_Reading_Query_FileSerializer(serializers.Serializer):
 	start = serializers.DateTimeField(format=datetime_format_str, input_formats=[datetime_format_str])
 	end = serializers.DateTimeField(format=datetime_format_str, input_formats=[datetime_format_str])
 	sensor_id = serializers.IntegerField()
+
+class Sensor_Reading_ZipSerializer(serializers.Serializer):
+	zip_file =serializers.FileField()
+	sensor_id = serializers.IntegerField()
+	timestamps = serializers.ListField(
+		child=serializers.CharField(allow_null=False)
+	)
