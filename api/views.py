@@ -106,18 +106,18 @@ class SensorReadingUnzip(APIView):
 			timestamps = serializer.data['timestamps'] # a list of timestamps?
 			sensor_id = serializer.data['sensor_id']
 			##IMP Check for valid sensor id
-
-			print(timestamps[0])
+			# print(timestamps[0])
 			with ZipFile(zip_file, 'r') as opened:
 				files = opened.infolist()
 				iter = 0
 				for readings_file in files:
 					raw_data = BytesIO(opened.read(readings_file))
 					file_obj = File_helper(raw_data, name=readings_file.filename)
-					timestamp = datetime.datetime.strptime(timestamps[iter], '%Y-%m-%d %H:%M:%S.%f')
+					timestamp = datetime.datetime.strptime(nix_to_ts(int(timestamps[iter])), '%Y-%m-%d %H:%M:%S.%f')
 					to_save = Sensor_Reading_File(sensor=Sensor.objects.get(pk=sensor_id), time=timestamp, data_file=file_obj)
 					to_save.save()
-					print(readings_file.filename,timestamps[iter])
+					iter+=1
+					# print(readings_file.filename,timestamps[iter])
 
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		else:
