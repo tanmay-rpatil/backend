@@ -11,6 +11,7 @@ from .serializers import *
 #Models and other local py imports
 ###
 from .models import Analytics, Device,File, Sensor, Sensor_Reading, Sensor_Reading_File
+from .helper import nix_to_ts
 ###
 
 #Misc libs
@@ -76,7 +77,13 @@ class SensorReadingFileView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request):
 		start = datetime.datetime.now() # for logging insertion time.
-		file_serializer = Sensor_Reading_FileSerializer(data=request.data)
+		new_obj = request.data.copy()
+		try:
+			new_obj['time'] = nix_to_ts(int(new_obj['time']))
+		except:
+			return Response("invalid fromat for timestamp", status=status.HTTP_400_BAD_REQUEST)
+		print(new_obj)
+		file_serializer = Sensor_Reading_FileSerializer(data=new_obj)
 		if file_serializer.is_valid():
 			file_serializer.save()
 			delta = datetime.datetime.now() - start
