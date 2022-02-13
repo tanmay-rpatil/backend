@@ -44,6 +44,6 @@ class Sensor_Reading_Query_FileSerializer(serializers.Serializer):
 class Sensor_Reading_ZipSerializer(serializers.Serializer):
 	zip_file =serializers.FileField()
 	sensor_id = serializers.IntegerField()
-	timestamps = serializers.ListField(
-		child=serializers.IntegerField(allow_null=False)
-	)
+	# timestamps = serializers.ListField(
+	# 	child=serializers.IntegerField(allow_null=False)
+	# )
