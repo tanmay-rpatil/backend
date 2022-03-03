@@ -124,7 +124,7 @@ class SensorReadingUnzip(APIView):
 					iter+=1
 					# print(readings_file.filename,timestamps[iter])
 
-			return Response({"saved count":iter, "sensor":str(sensor_used)}, status=status.HTTP_201_CREATED)
+			return Response({"saved count":iter, "sensor":str(sensor_used), "sensor_id": sensor_id}, status=status.HTTP_201_CREATED)
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
