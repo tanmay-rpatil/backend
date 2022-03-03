@@ -107,10 +107,11 @@ class SensorReadingUnzip(APIView):
 			# timestamps = serializer.data['timestamps'] # a list of timestamps?
 			sensor_id = serializer.data['sensor_id']
 			##IMP Check for valid sensor id
+			sensor_used = Sensor.objects.get(pk=sensor_id)
 			# print(timestamps[0])
+			iter = 0
 			with ZipFile(zip_file, 'r') as opened:
 				files = opened.infolist()
-				iter = 0
 				for readings_file in files:
 					raw_data = BytesIO(opened.read(readings_file))
 					fname = readings_file.filename
@@ -118,12 +119,12 @@ class SensorReadingUnzip(APIView):
 					ts = int(fname[fname.find('_')+1:fname.find('.')])
 					print(ts)
 					timestamp = datetime.datetime.strptime(nix_to_ts(ts), '%Y-%m-%d %H:%M:%S.%f')
-					to_save = Sensor_Reading_File(sensor=Sensor.objects.get(pk=sensor_id), time=timestamp, data_file=file_obj)
+					to_save = Sensor_Reading_File(sensor=sensor_used, time=timestamp, data_file=file_obj)
 					to_save.save()
 					iter+=1
 					# print(readings_file.filename,timestamps[iter])
 
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
+			return Response({"saved count":iter, "sensor":str(sensor_used)}, status=status.HTTP_201_CREATED)
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
