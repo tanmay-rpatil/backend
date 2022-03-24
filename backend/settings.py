@@ -9,12 +9,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+key_fh = open( os.path.join(BASE_DIR,'config_files/key.txt'),'r')
+SECRET_KEY = key_fh.readline()
+key_fh.close()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.environ['HOSTNAME']]
+ALLOWED_HOSTS = ['127.0.0.1','localhost','0.0.0.0']
 
 # Application definition
 
@@ -67,16 +69,18 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 # print(os.environ['SECRET_KEY'])
+pswd_fh = open(os.path.join(BASE_DIR,'config_files/pswd.txt'),'r')
 DATABASES = {
     'default': {
         'ENGINE': 'timescale.db.backends.postgresql', # for integrating timescaledb
         'USER': 'postgres',
         'NAME': 'backend',
         'HOST': 'localhost',
-        'PASSWORD': os.environ['PSWD'],
+        'PASSWORD': pswd_fh.readline()
         # 'CONN_MAX_AGE':10,
     },
 }
+pswd_fh.close()
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -117,7 +121,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 

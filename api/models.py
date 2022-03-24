@@ -29,7 +29,7 @@ class Device(models.Model):
 
 class Sensor(models.Model):
 	# each unique sensor
-	type_of_sensor= models.ForeignKey(Schema, on_delete=models.RESTRICT, null=False, blank=False ) # type, hence schema is selected here
+	type_of_sensor= models.ForeignKey(Schema, on_delete=models.RESTRICT, null=False, blank=False,help_text="Select schema. If suitable one doesn't exist, add one to Scehma table" ) # type, hence schema is selected here
 	device = models.ForeignKey(Device, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from device to sensor
 
 	def __str__(self):
