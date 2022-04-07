@@ -69,13 +69,18 @@ $ sudo service postgresql restart
     sudo /etc/init.d/apache2 stop
     sudo /home/f20190054/backend/env/bin/python /home/f20190054/backend/manage.py  runserver 0.0.0.0:80
 
-### For setting up cronjob to start serer at reboot
+### For setting up cronjob to start server at reboot
 
     crontab -e
         #insert the following line 
         @reboot /home/f20190054/backend/env/bin/python /home/f20190054/backend/manage.py  runserver 0.0.0.0:80
 
-### Using production sever - TODO
+### Using production server - TODO
+
+NGINX -> 
+    sudo nano /etc/nginx/nginx.conf
+    insidehttp{}, add:
+    client_max_body_size 100M;
 
 ### For truncating a table
 

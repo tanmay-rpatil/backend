@@ -73,7 +73,7 @@ class FileMethods(generics.RetrieveUpdateDestroyAPIView):
     queryset = File.objects.all()
     serializer_class = FileSerializer
 
-# for inserting sesnor readings as files
+# for inserting sesnor readings as single files
 class SensorReadingFileView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request):
@@ -94,7 +94,7 @@ class SensorReadingFileView(APIView):
 		else:
 			return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# for extracting sensor files from zip:
+# for extracting multiple sensor files from zip
 class SensorReadingUnzip(APIView):
 	parser_classes = (MultiPartParser, FormParser, FileUploadParser)
 	def post(self, request):
