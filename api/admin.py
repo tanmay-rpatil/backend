@@ -1,6 +1,11 @@
+from pyexpat import model
 from django.contrib import admin
-from .models import Device,File, Sensor,Analytics, Sensor_Reading, Sensor_Reading_File,Schema
+from .models import Device,File, Questionnaire, Response, Sensor,Analytics, Application, Sensor_Reading, Sensor_Reading_File,Schema
 # Register your models here.
+
+@admin.register(Application)
+class ApplicationAdmin(admin.ModelAdmin):
+	list_display = ['name']
 
 @admin.register(Sensor)
 class SensorAdmin(admin.ModelAdmin):
@@ -33,7 +38,11 @@ class Sensor_ReadingFileAdmin(admin.ModelAdmin):
 @admin.register(Schema)
 class SchemaAdmin(admin.ModelAdmin):
 	list_display = ['category','table']
-## UTC seconds to SQL timestamp
-# do = datetime.datetime.strptime(ts_new, '%Y-%m-%d %H:%M:%S.%f')
-# a = Accel(device_id=d,active_ms=100,timestamp=do,x_axis='1',y_axis='2',z_axis='3')
-# '2019-08-01 18:03:38.000671'
+
+@admin.register(Questionnaire)
+class QuestionnaireAdmin(admin.ModelAdmin):
+	list_display = ['app','title']
+
+@admin.register(Response)
+class ResponseAdmin(admin.ModelAdmin):
+	list_display = ['questions','user']

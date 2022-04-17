@@ -2,13 +2,20 @@ from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 from . import views
 urlpatterns = [
-    # path('', views.apiOverview, name="api-overview"),
+    # sensor readings
 	path('insert/', views.insert ,name='insert'),
-	path('insert_analytics/', views.insert_analytics ,name='insert_analytics'),
-	path('upload/', views.FileView.as_view() ,name='upload'),
-	path('files/<int:pk>', views.FileMethods.as_view(), name='file_methods'),
 	path('upload_readings/', views.SensorReadingFileView.as_view() ,name='upload_readings'),
 	path('upload_zip/', views.SensorReadingUnzip.as_view() ,name='upload_zip'),
-	path('query_readings_file/', views.ReadingQueryView.as_view() ,name='query_readings_file'),	
+	path('query_readings_file/', views.ReadingQueryView.as_view() ,name='query_readings_file'),
+	# files
+	path('upload/', views.FileView.as_view() ,name='upload'),
+	path('files/<int:pk>', views.FileMethods.as_view(), name='file_methods'),
+	# analytics
+	path('insert_analytics/', views.insert_analytics ,name='insert_analytics'),
+	# questionnaires/notifications
+	path('response', views.ResponseView.as_view(), name='upload_response'),
+	path('response/<int:pk>', views.ResponseMethods.as_view(), name='response_methods'),
+	path('notif', views.QuestionnaireView.as_view(), name='upload_questionnaire'),	 	
+	path('notif/<int:pk>', views.QuestionnaireMethods.as_view(), name='questionnaire_methods'),	 
 ]
 urlpatterns = format_suffix_patterns(urlpatterns) # in order to accept URLS like "/entry-details/2.json" or "/entry-details/2.api" or "/entry-list.json"

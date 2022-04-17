@@ -22,7 +22,7 @@ class Schema(models.Model):
 		return ( (self.table) + '_' + (self.category) )
 
 class Application(models.Model):
-	name = models.CharField(max_length=100, blank=False,null=False, default="device")
+	name = models.CharField(max_length=100, blank=False,null=False, default="App")
 	properties  = models.JSONField(blank=False, null=False, default=dict)
 	def __str__(self):
 		return ( self.name )

@@ -11,7 +11,7 @@ from .serializers import *
 
 #Models and other local py imports
 ###
-from .models import Analytics, Device,File, Sensor, Sensor_Reading, Sensor_Reading_File
+from .models import Analytics, Device,File, Questionnaire, Sensor, Sensor_Reading, Sensor_Reading_File, Response
 from .helper import nix_to_ts
 ###
 
@@ -33,7 +33,7 @@ from django.core.files import File as File_helper
 #BASE DIRECTORY NAME
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-## Insertions
+## Sensor Reading views
 # bulk insert for sesnor stream data in JSON format
 @api_view(['POST'])
 def insert(request,format=None):
@@ -55,23 +55,6 @@ def insert(request,format=None):
 	with open( str(BASE_DIR.joinpath('testing/delta.txt')) ,'a') as log:
 		log.write(str(serializer.data['count'])+','+str(delta.total_seconds())+'\n')
 		return Response(serializer.data)
-
-class FileView(APIView):
-	parser_classes = (MultiPartParser, FormParser)
-	#create
-	def post(self, request):
-		file_serializer = FileSerializer(data=request.data)
-		if file_serializer.is_valid():
-			file_serializer.save()
-			return Response(file_serializer.data, status=status.HTTP_201_CREATED)
-		else:
-			return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class FileMethods(generics.RetrieveUpdateDestroyAPIView):
-	# HTTP methods included:
-	# PUT- full update, PATCH- partial update, GET- retrive by id, DELETE- delete 
-    queryset = File.objects.all()
-    serializer_class = FileSerializer
 
 # for inserting sesnor readings as single files
 class SensorReadingFileView(APIView):
@@ -128,24 +111,6 @@ class SensorReadingUnzip(APIView):
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-# bulk insert for analytics data in JSON format
-@api_view(['POST'])
-def insert_analytics(request,format=None):
-	serializer = InputSerializer(data=request.data)
-	print('serializer')
-	if serializer.is_valid():
-		print('valid')
-		print(serializer.data['sensor_id'])
-		sensor = Sensor.objects.get( pk = int(serializer.data['sensor_id']))
-		data = (serializer.data['data'])
-		for line in data:
-			# print(line['timestamp'])
-			timestamp = datetime.datetime.strptime(line['timestamp'], '%Y-%m-%d %H:%M:%S.%f')
-			a = Analytics(sensor=sensor,timestamp=timestamp,data=line['data'])
-			a.save()
-	return Response(serializer.data)
-
 # old version -> insert single sensor reading
 @api_view(['POST'])
 def insert_readings(request,format=None):
@@ -156,10 +121,7 @@ def insert_readings(request,format=None):
 	# print(serializer.data['device_id'])
 	return Response(serializer.data)
 
-
-
-## Querying
-# return a zip of all files in range
+# Querying: return a zip of all files in range
 class ReadingQueryView(APIView):
 	def post(self, request):
 		serializer = Sensor_Reading_Query_FileSerializer(data=request.data)
@@ -199,4 +161,72 @@ class ReadingQueryView(APIView):
 			# return Response( status=status.HTTP_201_CREATED) #change response code
 		else:
 			return Response( status=status.HTTP_400_BAD_REQUEST)
+
+####################################################################
+
+## Files
+# insert a single file
+class FileView(APIView):
+	parser_classes = (MultiPartParser, FormParser)
+	#create
+	def post(self, request):
+		file_serializer = FileSerializer(data=request.data)
+		if file_serializer.is_valid():
+			file_serializer.save()
+			return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+		else:
+			return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class FileMethods(generics.RetrieveUpdateDestroyAPIView):
+	# HTTP methods included:
+	# PUT- full update, PATCH- partial update, GET- retrive by id, DELETE- delete 
+    queryset = File.objects.all()
+    serializer_class = FileSerializer
+
+####################################################################
+
+## Notif/Questionnaire Views 
+class QuestionnaireView(generics.CreateAPIView):
+	# HTTP methods included:
+	# POST - create questionnaire 
+    queryset = Questionnaire.objects.all()
+    serializer_class = QuestionnaireSerializer
+
+class QuestionnaireMethods(generics.RetrieveUpdateDestroyAPIView):
+	# HTTP methods included:
+	# PUT- full update, PATCH- partial update, GET- retrive by id, DELETE- delete 
+    queryset = Questionnaire.objects.all()
+    serializer_class = QuestionnaireSerializer
+
+class ResponseView(generics.CreateAPIView):
+	# HTTP methods included:
+	# POST - create Response 
+    queryset = Response.objects.all()
+    serializer_class = ResponseSerializer
+
+class ResponseMethods(generics.RetrieveUpdateDestroyAPIView):
+	# HTTP methods included:
+	# PUT- full update, PATCH- partial update, GET- retrive by id, DELETE- delete 
+    queryset = Response.objects.all()
+    serializer_class = ResponseSerializer
+
+####################################################################
+
+## Analytics
+# bulk insert for analytics data in JSON format
+@api_view(['POST'])
+def insert_analytics(request,format=None):
+	serializer = InputSerializer(data=request.data)
+	print('serializer')
+	if serializer.is_valid():
+		print('valid')
+		print(serializer.data['sensor_id'])
+		sensor = Sensor.objects.get( pk = int(serializer.data['sensor_id']))
+		data = (serializer.data['data'])
+		for line in data:
+			# print(line['timestamp'])
+			timestamp = datetime.datetime.strptime(line['timestamp'], '%Y-%m-%d %H:%M:%S.%f')
+			a = Analytics(sensor=sensor,timestamp=timestamp,data=line['data'])
+			a.save()
+	return Response(serializer.data)
 

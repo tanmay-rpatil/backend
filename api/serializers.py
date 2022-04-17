@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import File,Analytics,Sensor_Reading,Analytics_File,Sensor_Reading_File
+from .models import File,Analytics,Sensor_Reading,Analytics_File,Sensor_Reading_File, Questionnaire, Response
 
 datetime_format_str = '%Y-%m-%d %H:%M:%S.%f'
 
@@ -47,3 +47,13 @@ class Sensor_Reading_ZipSerializer(serializers.Serializer):
 	# timestamps = serializers.ListField(
 	# 	child=serializers.IntegerField(allow_null=False)
 	# )
+
+class QuestionnaireSerializer(serializers.ModelSerializer):
+	class Meta():
+		model = Questionnaire
+		fields = '__all__'
+
+class ResponseSerializer(serializers.ModelSerializer):
+	class Meta():
+		model = Response
+		fields = '__all__'
