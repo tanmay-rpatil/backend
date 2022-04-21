@@ -27,19 +27,19 @@ class Application(models.Model):
 	def __str__(self):
 		return ( self.name )
 
-class Response(models.Model): 
-	user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from user to response
-	questions = models.ForeignKey(Application, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from questionnaire to response
-	answers = models.JSONField(blank=False, null=False, default=dict)
-	def __str__(self):
-		return ( str(self.user) + "'s response to " + str(self.questions))
-
 class Questionnaire(models.Model): #allow for Responses to not be tied to a particular application
 	title =  models.CharField(max_length=100, blank=False,null=False, default="Question set")
 	app = models.ForeignKey(Application, on_delete=models.RESTRICT, null=True, blank=True ) # one to many from appl to ques
 	questions = models.JSONField(blank=False, null=False, default=dict)
 	def __str__(self):
 		return ( (self.title) + " for app: " + str(self.app) )
+		
+class Response(models.Model): 
+	user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from user to response
+	questions = models.ForeignKey(Questionnaire, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from questionnaire to response
+	answers = models.JSONField(blank=False, null=False, default=dict)
+	def __str__(self):
+		return ( str(self.user) + "'s response to " + str(self.questions))
 
 class Device(models.Model):
 	name = models.CharField(max_length=100, blank=False,null=False, default="device")
