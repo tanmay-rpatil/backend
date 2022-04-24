@@ -5,34 +5,38 @@ from .models import Device,File, Questionnaire, Response, Sensor,Analytics, Appl
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
+	readonly_fields = ('id',)
 	list_display = ['name']
 
 @admin.register(Sensor)
 class SensorAdmin(admin.ModelAdmin):
+	readonly_fields = ('id',)
 	list_display = ['type_of_sensor', 'device']
 
 @admin.register(Device)
 class DeviceAdmin(admin.ModelAdmin):
+	readonly_fields = ('id',)
 	list_display = ['name', 'user']
 
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
-	# readonly_fields = ('file',)
 	list_display = ['timestamp', 'file']
 
 @admin.register(Analytics)
 class AnalyticsAdmin(admin.ModelAdmin):
 	readonly_fields = ('timestamp',)
+	readonly_fields = ('id',)
 	list_display = ['timestamp', 'sensor']
 
 @admin.register(Sensor_Reading)
 class Sensor_ReadingAdmin(admin.ModelAdmin):
 	readonly_fields = ('time',)
+	readonly_fields = ('id',)
 	list_display = ['time', 'sensor']
 
 @admin.register(Sensor_Reading_File)
 class Sensor_ReadingFileAdmin(admin.ModelAdmin):
-	# readonly_fields = ('file',)
+	readonly_fields = ('id',)
 	list_display = ['time', 'data_file','sensor']
 
 @admin.register(Schema)
@@ -41,8 +45,10 @@ class SchemaAdmin(admin.ModelAdmin):
 
 @admin.register(Questionnaire)
 class QuestionnaireAdmin(admin.ModelAdmin):
+	readonly_fields = ('id',)
 	list_display = ['app','title']
 
 @admin.register(Response)
 class ResponseAdmin(admin.ModelAdmin):
+	readonly_fields = ('id',)
 	list_display = ['questions','user']
