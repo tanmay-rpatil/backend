@@ -21,12 +21,6 @@ class Schema(models.Model):
 	def __str__(self):
 		return ( (self.table) + '_' + (self.category) )
 
-class Application(models.Model):
-	name = models.CharField(max_length=100, blank=False,null=False, default="App")
-	properties  = models.JSONField(blank=False, null=False, default=dict)
-	def __str__(self):
-		return ( self.name )
-
 class Questionnaire(models.Model): #allow for Responses to not be tied to a particular application
 	title =  models.CharField(max_length=100, blank=False,null=False, default="Question set")
 	app = models.ForeignKey(Application, on_delete=models.RESTRICT, null=True, blank=True ) # one to many from appl to ques

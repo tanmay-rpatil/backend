@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'rest_framework',
     'django_cleanup.apps.CleanupConfig',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +132,16 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 26214400
+
+# for swagger docs (drff-spectacular)
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'mHealth API',
+    'DESCRIPTION': 'APIs to log sensor data, files, surveys/responses etc',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
+}

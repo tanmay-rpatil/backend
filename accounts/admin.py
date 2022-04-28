@@ -8,10 +8,12 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ['email', 'username',]
+    readonly_fields = ('id',)
+    list_display = ['username', 'email',]
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
+	readonly_fields = ('id',)
 	list_display = ['name']
 
 admin.site.register(CustomUser, CustomUserAdmin)
