@@ -11,7 +11,7 @@ from .serializers import *
 
 #Models and other local py imports
 ###
-from .models import Analytics, Device,File, Questionnaire, Sensor, Sensor_Reading, Sensor_Reading_File, Response
+from .models import *
 from .helper import nix_to_ts
 ###
 
@@ -75,6 +75,7 @@ class SensorReadingFileView(APIView):
 				log.write(str(file_serializer.data['sensor'])+' : '+str(delta.total_seconds())+'\n')
 			return Response(file_serializer.data, status=status.HTTP_201_CREATED)
 		else:
+			print("bad req")
 			return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # for extracting multiple sensor files from zip
@@ -198,17 +199,17 @@ class QuestionnaireMethods(generics.RetrieveUpdateDestroyAPIView):
     queryset = Questionnaire.objects.all()
     serializer_class = QuestionnaireSerializer
 
-class ResponseView(generics.CreateAPIView):
+class ResponsesView(generics.CreateAPIView):
 	# HTTP methods included:
 	# POST - create Response 
-    queryset = Response.objects.all()
-    serializer_class = ResponseSerializer
+    queryset = Responses.objects.all()
+    serializer_class = ResponsesSerializer
 
-class ResponseMethods(generics.RetrieveUpdateDestroyAPIView):
+class ResponsesMethods(generics.RetrieveUpdateDestroyAPIView):
 	# HTTP methods included:
 	# PUT- full update, PATCH- partial update, GET- retrive by id, DELETE- delete 
-    queryset = Response.objects.all()
-    serializer_class = ResponseSerializer
+    queryset = Responses.objects.all()
+    serializer_class = ResponsesSerializer
 
 ####################################################################
 

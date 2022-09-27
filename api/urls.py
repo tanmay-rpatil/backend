@@ -13,8 +13,8 @@ urlpatterns = [
 	# analytics
 	path('insert_analytics/', views.insert_analytics ,name='insert_analytics'),
 	# questionnaires/notifications
-	path('response', views.ResponseView.as_view(), name='upload_response'),
-	path('response/<int:pk>', views.ResponseMethods.as_view(), name='response_methods'),
+	path('response', views.ResponsesView.as_view(), name='upload_response'),
+	path('response/<int:pk>', views.ResponsesMethods.as_view(), name='response_methods'),
 	path('notif', views.QuestionnaireView.as_view(), name='upload_questionnaire'),	 	
 	path('notif/<int:pk>', views.QuestionnaireMethods.as_view(), name='questionnaire_methods'),	 
 ]

@@ -28,7 +28,7 @@ class Questionnaire(models.Model): #allow for Responses to not be tied to a part
 	def __str__(self):
 		return ( (self.title) + " for app: " + str(self.app) )
 		
-class Response(models.Model): 
+class Responses(models.Model): 
 	user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from user to response
 	questions = models.ForeignKey(Questionnaire, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from questionnaire to response
 	answers = models.JSONField(blank=False, null=False, default=dict)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import File,Analytics,Sensor_Reading,Analytics_File,Sensor_Reading_File, Questionnaire, Response
+from .models import *
 
 datetime_format_str = '%Y-%m-%d %H:%M:%S.%f'
 
@@ -21,10 +21,10 @@ class AnalyticsSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 class Sensor_ReadingSerializer(serializers.ModelSerializer):
-	
 	class Meta():
 		model = Sensor_Reading
 		fields = '__all__'
+		
 #for testing the upload as file method
 class Sensor_Reading_FileSerializer(serializers.ModelSerializer):
 	class Meta():
@@ -53,7 +53,7 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
 		model = Questionnaire
 		fields = '__all__'
 
-class ResponseSerializer(serializers.ModelSerializer):
+class ResponsesSerializer(serializers.ModelSerializer):
 	class Meta():
-		model = Response
+		model = Responses
 		fields = '__all__'

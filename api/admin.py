@@ -1,6 +1,6 @@
 from pyexpat import model
 from django.contrib import admin
-from .models import Device,File, Questionnaire, Response, Sensor,Analytics, Sensor_Reading, Sensor_Reading_File,Schema
+from .models import *
 # Register your models here.
 
 @admin.register(Sensor)
@@ -43,7 +43,7 @@ class QuestionnaireAdmin(admin.ModelAdmin):
 	readonly_fields = ('id',)
 	list_display = ['app','title']
 
-@admin.register(Response)
-class ResponseAdmin(admin.ModelAdmin):
+@admin.register(Responses)
+class ResponsesAdmin(admin.ModelAdmin):
 	readonly_fields = ('id',)
 	list_display = ['questions','user']
