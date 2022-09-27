@@ -126,12 +126,19 @@ def insert_readings(request,format=None):
 class ReadingQueryView(APIView):
 	def post(self, request):
 		serializer = Sensor_Reading_Query_FileSerializer(data=request.data)
+		new_obj = request.data.copy()
 		# print(serializer)    
-		if serializer.is_valid():
+		try:
+			new_obj['start'] = nix_to_ts(int(new_obj['start']))
+			new_obj['end'] = nix_to_ts(int(new_obj['end']))
+		except:
+			return Response("invalid fromat for start or end timestamp", status=status.HTTP_400_BAD_REQUEST)
+		query_serializer = Sensor_Reading_Query_FileSerializer(data=new_obj)
+		if query_serializer.is_valid():
 			# query the db to get a list of files
-			start_datetime = (serializer.data['start'])
-			end_datetime = (serializer.data['end'])
-			sensor = (serializer.data['sensor_id'])
+			start_datetime = (query_serializer.data['start'])
+			end_datetime = (query_serializer.data['end'])
+			sensor = (query_serializer.data['sensor_id'])
 			files_list_qs = Sensor_Reading_File.objects.filter(time__range=(start_datetime,end_datetime),sensor=sensor)
 			print(start_datetime,end_datetime,sensor)
 			# archive the file list 
