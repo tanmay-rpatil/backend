@@ -3,3 +3,9 @@ NOTES
 - Check sql bottleneck
 - sector size
 - 
+
+userid 
+
+start timestamp not known --> way to get this value
+
+time offset instead of end time 

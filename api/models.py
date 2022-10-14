@@ -40,7 +40,7 @@ class Device(models.Model):
 	user = models.ForeignKey(CustomUser, on_delete=models.RESTRICT, null=False, blank=False ) # one to many from user to device
 	properties  = models.JSONField(blank=False, null=False, default=dict)
 	def __str__(self):
-		return ( str(self.user) + "'s " + self.name + " :" + str(self.pk) )
+		return ( str(self.user) + "_" + self.name + "_" + str(self.pk) )
 
 class Sensor(models.Model):
 	# each unique sensor

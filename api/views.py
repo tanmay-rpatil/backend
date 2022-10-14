@@ -140,12 +140,9 @@ class ReadingQueryView(APIView):
 			end_datetime = (query_serializer.data['end'])
 			sensor = (query_serializer.data['sensor_id'])
 			files_list_qs = Sensor_Reading_File.objects.filter(time__range=(start_datetime,end_datetime),sensor=sensor)
-			print(start_datetime,end_datetime,sensor)
 			# archive the file list 
-			# Folder name in ZIP archive which contains the files
-			# E.g [thearchive.zip]/somefiles/file2.txt
-			# zip_subdir = str(BASE_DIR.joinpath('queries/query.zip'))
-			zip_subdir = 'query'
+			sensor_name = (Sensor.objects.filter(pk=sensor))[0].__str__()
+			zip_subdir = str(sensor_name)
 			zip_filename = "%s.zip" % zip_subdir
 			# Open BytesIO to grab in-memory ZIP contents
 			s = BytesIO()
@@ -166,7 +163,6 @@ class ReadingQueryView(APIView):
 			print(resp)    
 			return resp
 			##credits: @dbr https://stackoverflow.com/questions/67454/serving-dynamically-generated-zip-archives-in-django
-			# return Response( status=status.HTTP_201_CREATED) #change response code
 		else:
 			return Response( status=status.HTTP_400_BAD_REQUEST)
 
