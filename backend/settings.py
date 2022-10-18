@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'api.apps.ApiConfig',
     'rest_framework',
+    'knox',
     'django_cleanup.apps.CleanupConfig',
     'drf_spectacular',
 ]
@@ -136,6 +137,7 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 26214400
 # for swagger docs (drff-spectacular)
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': ['knox.auth.TokenAuthentication'],
 }
 
 SPECTACULAR_SETTINGS = {
