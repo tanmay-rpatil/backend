@@ -1,11 +1,10 @@
 # REST framework libs used
 ###
-from fnmatch import fnmatch
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from rest_framework import status, generics #for CRUD
+from rest_framework import status, generics, permissions #for CRUD
 from .serializers import *
 ###
 
@@ -59,6 +58,7 @@ def insert(request,format=None):
 # for inserting sesnor readings as single files
 class SensorReadingFileView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
+	permission_classes = (permissions.IsAuthenticated,)
 	def post(self, request):
 		start = datetime.datetime.now() # for logging insertion time.
 		new_obj = request.data.copy()
