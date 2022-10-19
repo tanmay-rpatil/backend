@@ -7,12 +7,12 @@ def error_dict():
 
 class CustomUser(AbstractUser):
 	# can add additional fields
-	properties  = models.JSONField(blank=False, null=False, default=dict)
+	properties  = models.JSONField(blank=True, null=True, default=dict, help_text='A JSON field to specify misc properties')
 	def __str__(self):
 		return (self.username)
 
 class Application(models.Model):
 	name = models.CharField(max_length=100, blank=False,null=False)
-	properties = models.JSONField(blank=False, null=False, default=dict)
+	properties = models.JSONField(blank=True, null=True, default=dict, help_text='A JSON field to specify misc properties')
 	def __str__(self):
 		return (self.name)

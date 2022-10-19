@@ -1,3 +1,5 @@
+from urllib import request
+from accounts.models import CustomUser
 from .forms import CustomUserCreationForm
 from .serializers import CustomUserSerializer,RegisterSerializer,AuthSerializer
 
@@ -34,9 +36,15 @@ class LoginAPI(LoginView):
     permission_classes = (permissions.AllowAny,)
     
     def post(self, request, format=None):
-        print('test')
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True) #TODO change to helpful return code
         user = serializer.validated_data['user']
         login(request,user)
         return super(LoginAPI, self).post(request, format=None)
+
+class Profile(generics.RetrieveAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user

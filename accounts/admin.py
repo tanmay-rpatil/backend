@@ -9,7 +9,10 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     model = CustomUser
     readonly_fields = ('id',)
-    list_display = ['username', 'email',]
+    list_display = ['username', 'email','properties']
+    fieldsets = (
+            (None, {'fields': ('properties',)}),
+    ) + UserAdmin.fieldsets 
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
